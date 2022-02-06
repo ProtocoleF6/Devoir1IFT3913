@@ -7,6 +7,7 @@ public class Main {
     {
         //System.out.println("Working Directory = " + System.getProperty("user.dir"));
        //System.out.println(CLOC.getDensityPackage(new File("./src/Code")));
-        Rapport.ProduceRapportPackage("./src");
+        //Rapport.ProduceRapportPackage("./src");
+        System.out.println(WMC.getWMCClass(new File("./src/Code/CLOC.java")));
     }
 }
