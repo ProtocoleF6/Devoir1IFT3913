@@ -1,8 +1,9 @@
 package Code;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Rapport {
@@ -10,35 +11,35 @@ public class Rapport {
 
         File folder = new File(pathPackage);        //https://stackoverflow.com/questions/1844688/how-to-read-all-files-in-a-folder-from-java
         try {
-            PrintWriter writer = new PrintWriter("package.csv");
 
-            StringBuilder sb = new StringBuilder();
-            sb.append("chemin,class,classe_LOC,classe_CLOC,classe_DC\n");
-            ArrayList<String> res =recursiveFCt(folder);
-            for(String row : res){
-                sb.append(row);
+            //PrintWriter writer = new PrintWriter("package.csv");
+            BufferedWriter writer = Files.newBufferedWriter(Paths.get("package.csv"));
+            https://attacomsian.com/blog/read-write-csv-files-core-java
+            writer.write("chemin,package,package_LOC,package_CLOC,package_DC");writer.newLine();
+            ArrayList<ArrayList<String>> res = recursiveFCt(folder);
+            for (ArrayList<String> row : res) {
+                writer.write(String.join(",", row));
+                writer.newLine();
             }
 
-            writer.write(sb.toString());
-        } catch (FileNotFoundException e) {
+        writer.close();
+        } catch (IOException e) {
             e.printStackTrace();
 
         }
     }
 
-    private static ArrayList<String> recursiveFCt(File folder) {
-        ArrayList<String> res=new ArrayList<>();
-        for (final File fileEntry : folder.listFiles()) {
-            if (!folder.isDirectory()) {
+    private static ArrayList<ArrayList<String>> recursiveFCt(File folder) {
+        ArrayList<ArrayList<String>> res = new ArrayList<>();
+        if (!folder.isDirectory()) {
 
+            ArrayList<String> temp = getSringClass(folder);
+            res.add(temp);
+        } else {
+            for (final File fileEntry : folder.listFiles()) {
 
-                String resStringClass = getSringClass(fileEntry);
-                resStringClass = folder.getAbsolutePath() + "," + resStringClass + "\n";
-                res.add(resStringClass);
-
-            } else {
-                ArrayList<String> newRes=recursiveFCt(fileEntry);
-                for(String transf:newRes){
+                ArrayList<ArrayList<String>> newRes = recursiveFCt(fileEntry);
+                for (ArrayList<String> transf : newRes) {
                     res.add(transf);
                 }
             }
@@ -46,14 +47,26 @@ public class Rapport {
         return res;
     }
 
-    private static String getSringClass(File fileEntry) {
-        String res = "";
+    private static ArrayList<String
+            > getSringClass(File fileEntry) {
+        ArrayList<String> res = new ArrayList<>();
+        res.add(fileEntry.getAbsolutePath());
+        res.add(fileEntry.getName());
+        res.add("" + CLOC.getnumberLineClass(fileEntry));
+        res.add("" + Code.CLOC.getNbrCommentaireClass(fileEntry));
+        res.add("" + CLOC.getDensityClass(fileEntry));
 
-        String name = fileEntry.getName();
-        String Loc = "" + CLOC.getnumberLineClass(fileEntry);
-        String CLOCStr = "" + Code.CLOC.getNbrCommentaireClass(fileEntry);
-        String DC = "" + CLOC.getDensityClass(fileEntry);
-        res = name + "," + Loc + "," + CLOCStr + "," + DC;
+        return res;
+    }
+    private static ArrayList<String
+            > getSringPackage(File fileEntry) {
+        ArrayList<String> res = new ArrayList<>();
+        res.add(fileEntry.getAbsolutePath());
+        res.add(fileEntry.getName());
+        res.add("" + CLOC.getnumberLineClass(fileEntry));
+        res.add("" + Code.CLOC.getNbrCommentaireClass(fileEntry));
+        res.add("" + CLOC.getDensityClass(fileEntry));
+
         return res;
     }
 
@@ -62,23 +75,24 @@ public class Rapport {
         File folder = new File(pathPackage);        //https://stackoverflow.com/questions/1844688/how-to-read-all-files-in-a-folder-from-java
         try {
             //https://stackoverflow.com/questions/30073980/java-writing-strings-to-a-csv-file
-            PrintWriter writer = new PrintWriter("classes.csv");
+            //PrintWriter writer = new PrintWriter("classes.csv");
+            BufferedWriter writer = Files.newBufferedWriter(Paths.get("classes.csv"));
+            writer.write("chemin,class,classe_LOC,classe_CLOC,classe_DC");
+            writer.newLine();
 
-            StringBuilder sb = new StringBuilder();
-            sb.append("chemin,class,classe_LOC,classe_CLOC,classe_DC\n");
             for (final File fileEntry : folder.listFiles()) {
                 if (!fileEntry.isDirectory()) {
 
 
-                    String resStringClass = getSringClass(fileEntry);
-                    resStringClass = pathPackage + "," + resStringClass + "\n";
-                    sb.append(resStringClass);
+                    ArrayList<String> temp = getSringClass(fileEntry);
+                    writer.write(String.join(",", temp));
+                    writer.newLine();
                 }
 
 
             }
-            writer.print(sb.toString());
-        } catch (FileNotFoundException e) {
+            writer.close();
+        } catch (IOException e) {
             e.printStackTrace();
 
         }
