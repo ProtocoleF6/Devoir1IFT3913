@@ -15,7 +15,10 @@ public class CLOC {
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 System.out.println(data);
-                res.add(data);
+                if(!data.equals("")){
+                    res.add(data);
+                }
+
             }
             myReader.close();
         } catch (FileNotFoundException e) {
