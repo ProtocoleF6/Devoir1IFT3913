@@ -54,20 +54,23 @@ public class Rapport {
         ArrayList<ArrayList<String>> res = new ArrayList<>();
         //si est une classe
         if (!folder.isDirectory()) {
-            //va chercher les info de la classe
-            ArrayList<String> temp = getSringPackage(folder, name, withWMC);
-            res.add(temp);
         } else {
             //si est un répertoire
+            //appel la fonction récursive
+            ArrayList<String> temp = getSringPackage(folder, name, withWMC);
+            res.add(temp);
             for (final File fileEntry : folder.listFiles()) {
-                //appel la fonction récursive
-                ArrayList<ArrayList<String>> newRes = recursiveFCt(fileEntry, folder.getName(), withWMC);
-                //prend le resultat fonction recurvise et ajoute dans un tableau
-                for (ArrayList<String> transf : newRes) {
-                    res.add(transf);
+                if (fileEntry.isDirectory()) {
+
+                    ArrayList<ArrayList<String>> newRes = recursiveFCt(fileEntry, fileEntry.getName(), withWMC);
+                    //prend le resultat fonction recurvise et ajoute dans un tableau
+                    for (ArrayList<String> transf : newRes) {
+                        res.add(transf);
+                    }
                 }
             }
         }
+
         return res;
     }
 
@@ -87,7 +90,7 @@ public class Rapport {
         res.add("" + CLOC.getDensityClass(fileEntry));
         if (withWMC) {
             res.add("" + WMC.getWMCClass(fileEntry));
-            res.add("" + WMC.getWMCClass(fileEntry));
+            res.add("" + WMC.getClassBC(fileEntry));
         }
         return res;
     }
@@ -103,12 +106,12 @@ public class Rapport {
         ArrayList<String> res = new ArrayList<>();
         res.add(fileEntry.getAbsolutePath());
         res.add(packageName);
-        res.add("" + CLOC.getnumberLineClass(fileEntry));
-        res.add("" + Code.CLOC.getNbrCommentaireClass(fileEntry));
-        res.add("" + CLOC.getDensityClass(fileEntry));
+        res.add("" + CLOC.getNumberLinePackage(fileEntry));
+        res.add("" + CLOC.getNbrCommentairePackage(fileEntry));
+        res.add("" + CLOC.getDensityPackage(fileEntry));
         if (withWMC) {
-            res.add("" + WMC.getWMCClass(fileEntry));
-            res.add("" + WMC.getWMCClass(fileEntry));
+            res.add("" + WMC.getWMCPackage(fileEntry));
+            res.add("" + WMC.getPackageBC(fileEntry));
         }
         return res;
     }
