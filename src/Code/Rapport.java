@@ -53,12 +53,11 @@ public class Rapport {
     private static ArrayList<ArrayList<String>> recursiveFCt(File folder, String name, boolean withWMC) {
         ArrayList<ArrayList<String>> res = new ArrayList<>();
         //si est une classe
-        if (!folder.isDirectory()) {
-        } else {
+        if (folder.isDirectory()) {
             //si est un répertoire
-            //appel la fonction récursive
             ArrayList<String> temp = getSringPackage(folder, name, withWMC);
             res.add(temp);
+            //appel la fonction récursive
             for (final File fileEntry : folder.listFiles()) {
                 if (fileEntry.isDirectory()) {
 

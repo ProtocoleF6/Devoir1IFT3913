@@ -43,13 +43,13 @@ public class CLOC {
      */
     public static int getNumberLinePackage(File folder) {
         int res = 0;
+        //si est une classe
         if (!folder.isDirectory()) {
             res += getnumberLineClass(folder);
         } else {
-
-
             //https://stackoverflow.com/questions/1844688/how-to-read-all-files-in-a-folder-from-java
             for (final File fileEntry : folder.listFiles()) {
+                //fonction recursive
                 res+=getNumberLinePackage(fileEntry);
             }
         }
@@ -96,13 +96,13 @@ public class CLOC {
      */
     public static int getNbrCommentairePackage(File folder) {
         int res = 0;//si est une classe
-
+        //ajoute le resultat
         if (!folder.isDirectory()) {
             res += getNbrCommentaireClass(folder);
         } else {
             //https://stackoverflow.com/questions/1844688/how-to-read-all-files-in-a-folder-from-java
             for (final File fileEntry : folder.listFiles()) {
-
+                //appel fonction recursive
                 res += getNbrCommentairePackage(fileEntry);
             }
 
