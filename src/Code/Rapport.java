@@ -116,6 +116,33 @@ public class Rapport {
     }
 
     /**
+     *
+     * @param folder repertoire actuel
+     * @param withWMC si on doit avoir le WMC
+     * @return array de chaque classes avec leur valeur
+     */
+    public static ArrayList<ArrayList<String>> recursifFctClass(File folder, boolean withWMC) {
+        ArrayList<ArrayList<String>> res = new ArrayList<>();
+        ArrayList<ArrayList<String>> newRes = new ArrayList<>();
+        if (folder.isDirectory()) {
+            //pour chaque file dans le fodler
+            for (final File file : folder.listFiles()) {
+                newRes = recursifFctClass(file, withWMC);
+                //ajoute le resultat
+                for (ArrayList<String> transf : newRes) {
+                    res.add(transf);
+                }
+            }
+
+        } else {
+            //si cest classe, va chercher info
+            res.add(getSringClass(folder, withWMC));
+        }
+
+        return res;
+    }
+
+    /**
      * @param pathPackage path de la classe
      * @param withWMC     si WMC
      */
@@ -132,17 +159,16 @@ public class Rapport {
             } else {
                 writer.write("chemin,class,classe_LOC,classe_CLOC,classe_DC");
             }
-
             writer.newLine();
-            //pour chaque classe du package
-            for (final File fileEntry : folder.listFiles()) {
-                if (!fileEntry.isDirectory()) {
-                    //va chercher les valeurs de la classe
-                    ArrayList<String> temp = getSringClass(fileEntry, withWMC);
-                    writer.write(String.join(",", temp));
-                    writer.newLine();
-                }
+            //va chercher toute les classes
+            ArrayList<ArrayList<String>> res = recursifFctClass(folder, withWMC);
+            //prend tous les rangés et les écrits dans le fichier
+            for (ArrayList<String> row : res) {
+                writer.write(String.join(",", row));
+                writer.newLine();
             }
+
+
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

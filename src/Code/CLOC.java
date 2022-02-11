@@ -62,26 +62,30 @@ public class CLOC {
      */
     public static int getNbrCommentaireClass(File file) {
         ArrayList<String> tabString = getClassString(file);
+        String finMultiligne="*/";
+        String debutMultiligne="/*";
+        String uneLigne="//";
+        String javadocCom="/**";
         int res = 0;
         //si est dans un commentaire multiligne
         boolean inComment = false;
         //pour chaque ligne de code
         for (String currentString : tabString) {
             //fin de commentaire multiligne
-            if (inComment && !currentString.contains("*/")) {
+            if (inComment && !currentString.contains(finMultiligne)) {
                 res++;
             } else {
                 //commentaire un ligne
-                if (currentString.contains("//")) {
+                if (currentString.contains(uneLigne)) {
                     res++;
                 }
             }
             //debut de commentaire multilgine
-            if (currentString.contains("/*") || currentString.contains("/**")) {
+            if (currentString.contains(debutMultiligne) || currentString.contains(javadocCom)) {
                 inComment = true;
                 res++;
             }//fin commentaire multiple
-            if (currentString.contains("*/")) {
+            if (currentString.contains(finMultiligne)) {
                 inComment = false;
                 res++;
             }
