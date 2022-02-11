@@ -1,8 +1,8 @@
 package Code;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.Scanner;
 
 public class CLOC {
@@ -62,10 +62,10 @@ public class CLOC {
      */
     public static int getNbrCommentaireClass(File file) {
         ArrayList<String> tabString = getClassString(file);
-        String finMultiligne="*/";
-        String debutMultiligne="/*";
-        String uneLigne="//";
-        String javadocCom="/**";
+        String finMultiligne=getProperties("multFin");
+        String debutMultiligne=getProperties("multDebut");
+        String uneLigne=getProperties("simple");
+        String javadocCom=getProperties("doc");
         int res = 0;
         //si est dans un commentaire multiligne
         boolean inComment = false;
@@ -130,6 +130,27 @@ public class CLOC {
         double nbrComment=getNbrCommentairePackage(folder);
         double nbrLine=getNumberLinePackage(folder);
         return (nbrComment/nbrLine);
+    }
+    public static String getProperties(String key) {
+        Properties prop = new Properties();
+        //https://mkyong.com/java/java-properties-file-examples/
+        try {
+            InputStream input = new FileInputStream("./config.properties");
+            //load a properties file from class path, inside static method
+            prop.load(input);
+
+
+            // get the property value and print it out
+
+
+
+            return prop.getProperty(key);
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+            return "";
+
+        }
     }
 
 }

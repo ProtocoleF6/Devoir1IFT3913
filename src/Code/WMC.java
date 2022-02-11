@@ -11,15 +11,18 @@ public class WMC {
     public static int getWMCClass(File file) {
         int res = 0;
         ArrayList<String> listString = CLOC.getClassString(file);
+        String ouvreture=CLOC.getProperties("ouverture");
+        String ifs=CLOC.getProperties("if");
+        String whiles=CLOC.getProperties("while");
         //pour chaque ligne, regarde si ouverture de bracket
         for (String row : listString) {
-            if (row.contains("){")) {
+            if (row.contains(ouvreture)) {
                 res += 1;
-            } else if (row.contains("if")) {
+            } else if (row.contains(ifs)) {
                 res += 1;
             }
             //pour le do while
-            else if (row.contains("while")) {
+            else if (row.contains(whiles)) {
                 res++;
             }
 
